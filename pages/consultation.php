@@ -32,7 +32,7 @@ if (isset($_GET['numero']) && $_GET['numero'] !== '') {
 
 <div class="row justify-content-center">
     <div class="col-md-7">
-        <h2 class="mb-4">Consulter ma situation</h2>
+        <h2 class="page-title">Consulter ma situation</h2>
         <p class="text-muted">Entrez votre numéro de candidat pour connaître votre rang et votre statut.</p>
 
         <form method="GET" class="mb-4">

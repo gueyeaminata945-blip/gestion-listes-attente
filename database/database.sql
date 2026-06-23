@@ -58,8 +58,10 @@ CREATE TABLE desistements (
     date_heure DATETIME DEFAULT CURRENT_TIMESTAMP,
     motif VARCHAR(255),
     inscription_id INT,
+    filiere_id INT,
     agent_id INT,
     FOREIGN KEY (inscription_id) REFERENCES inscriptions(id),
+    FOREIGN KEY (filiere_id) REFERENCES filieres(id),
     FOREIGN KEY (agent_id) REFERENCES utilisateurs(id)
 );
 
@@ -68,9 +70,24 @@ CREATE TABLE notifications (
     type VARCHAR(50),
     date_envoi DATETIME DEFAULT CURRENT_TIMESTAMP,
     statut ENUM('envoyee', 'confirmee', 'echouee') DEFAULT 'envoyee',
+    nb_relances INT NOT NULL DEFAULT 0,
+    date_relance DATETIME,
     date_confirmation DATETIME,
     inscription_id INT,
+    token VARCHAR(64),
     FOREIGN KEY (inscription_id) REFERENCES inscriptions(id)
+);
+
+CREATE TABLE codes_verification (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    utilisateur_id INT NOT NULL,
+    code VARCHAR(6) NOT NULL,
+    type ENUM('changement', 'reinitialisation') NOT NULL,
+    nouveau_hash VARCHAR(255),
+    expire_le DATETIME NOT NULL,
+    utilise TINYINT(1) NOT NULL DEFAULT 0,
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id)
 );
 
 CREATE TABLE historiques (

@@ -1,3 +1,8 @@
 *.log
 test.php
 motdepasse.php
+
+# Identifiants SMTP réels — ne pas publier sur GitHub.
+# (Copier config/mail.example.php vers config/mail.php et y mettre ses identifiants.)
+config/mail.php
+logs/

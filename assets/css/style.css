@@ -1,0 +1,203 @@
+/* =====================================================================
+   Thème ESP — Gestion des listes d'attente
+   Identité institutionnelle : bleu profond + or.
+   Toutes les couleurs sont pilotées par les variables ci-dessous :
+   pour changer la charte, il suffit de modifier ces valeurs.
+   ===================================================================== */
+
+:root {
+    --esp-blue:        #0E4D8B;
+    --esp-blue-dark:   #0A3A6B;
+    --esp-blue-darker: #082F57;
+    --esp-gold:        #E6A817;
+    --esp-gold-light:  #F2C94C;
+
+    --esp-bg:     #f4f6f9;
+    --esp-surface:#ffffff;
+    --esp-text:   #243140;
+    --esp-muted:  #6b7a8d;
+    --esp-border: #e4e9f0;
+
+    --esp-radius: 12px;
+    --esp-shadow: 0 2px 10px rgba(16, 42, 77, 0.06);
+    --esp-shadow-hover: 0 6px 22px rgba(16, 42, 77, 0.12);
+
+    /* On aligne la couleur primaire de Bootstrap sur le bleu ESP. */
+    --bs-primary: var(--esp-blue);
+    --bs-primary-rgb: 14, 77, 139;
+}
+
+/* ----------------------------- Base ----------------------------- */
+body {
+    background-color: var(--esp-bg);
+    color: var(--esp-text);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main, .container { flex: 1 0 auto; }
+
+h1, h2, h3, h4, h5 { color: var(--esp-blue-darker); font-weight: 600; }
+
+a { color: var(--esp-blue); }
+a:hover { color: var(--esp-blue-dark); }
+
+/* --------------------------- Navbar ----------------------------- */
+.navbar-esp {
+    background: linear-gradient(90deg, var(--esp-blue-darker), var(--esp-blue));
+    box-shadow: 0 2px 12px rgba(8, 47, 87, 0.25);
+}
+
+.navbar-esp .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: .2px;
+}
+
+/* Wordmark « ESP » construit en CSS (aucune image nécessaire). */
+.esp-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: var(--esp-blue);
+    border-radius: 9px;
+    font-weight: 800;
+    font-size: 15px;
+    letter-spacing: .5px;
+    border-bottom: 3px solid var(--esp-gold);
+    box-shadow: 0 2px 6px rgba(0,0,0,.15);
+}
+
+.navbar-brand .esp-brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.navbar-brand .esp-brand-text small { font-weight: 400; font-size: .68rem; color: var(--esp-gold-light); }
+
+.navbar-esp .nav-link {
+    color: rgba(255,255,255,.85);
+    font-weight: 500;
+    padding: .4rem .85rem;
+    border-radius: 8px;
+    transition: background-color .15s, color .15s;
+}
+.navbar-esp .nav-link:hover { color: #fff; background: rgba(255,255,255,.12); }
+.navbar-esp .nav-link.actif { color: var(--esp-blue-darker); background: var(--esp-gold-light); }
+
+.navbar-esp .navbar-text { color: rgba(255,255,255,.9); }
+.navbar-esp .navbar-toggler { border-color: rgba(255,255,255,.4); }
+
+.esp-badge-role {
+    background: var(--esp-gold);
+    color: var(--esp-blue-darker);
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 6px;
+}
+
+/* ---------------------------- Cartes ---------------------------- */
+.card {
+    border: 1px solid var(--esp-border);
+    border-radius: var(--esp-radius);
+    box-shadow: var(--esp-shadow);
+    transition: box-shadow .18s, transform .18s;
+}
+.card:hover { box-shadow: var(--esp-shadow-hover); }
+
+/* Cartes statistiques colorées du tableau de bord */
+.card.text-white { border: none; }
+.card.text-white h1 { font-weight: 700; }
+
+/* --------------------------- Tableaux --------------------------- */
+.table { background: var(--esp-surface); border-radius: var(--esp-radius); overflow: hidden; }
+.table > :not(caption) > * > * { padding: .8rem .9rem; }
+.table thead th { border-bottom: 2px solid var(--esp-border); font-weight: 600; }
+
+/* En-têtes de tableau : on harmonise certaines variantes Bootstrap au thème. */
+.table-primary  { --bs-table-bg: #e7eef7; }
+.table-dark     { --bs-table-bg: var(--esp-blue-darker); }
+
+/* --------------------------- Boutons ---------------------------- */
+.btn-primary {
+    background-color: var(--esp-blue);
+    border-color: var(--esp-blue);
+}
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--esp-blue-dark);
+    border-color: var(--esp-blue-dark);
+}
+.btn-outline-primary { color: var(--esp-blue); border-color: var(--esp-blue); }
+.btn-outline-primary:hover { background: var(--esp-blue); border-color: var(--esp-blue); }
+
+/* ------------------------ En-tête de page ----------------------- */
+.page-title {
+    border-left: 5px solid var(--esp-gold);
+    padding-left: 14px;
+    margin-bottom: 1.5rem;
+}
+
+/* --------------------- Authentification (login) ----------------- */
+.auth-wrap {
+    max-width: 430px;
+    margin: 3rem auto;
+}
+.auth-card {
+    background: var(--esp-surface);
+    border-radius: 16px;
+    box-shadow: var(--esp-shadow-hover);
+    overflow: hidden;
+}
+.auth-card .auth-head {
+    background: linear-gradient(135deg, var(--esp-blue-darker), var(--esp-blue));
+    color: #fff;
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+}
+.auth-card .auth-head .esp-logo { width: 56px; height: 56px; font-size: 20px; margin-bottom: .8rem; }
+.auth-card .auth-head h1 { color: #fff; font-size: 1.4rem; margin: 0; }
+.auth-card .auth-head p { color: var(--esp-gold-light); margin: .25rem 0 0; font-size: .9rem; }
+.auth-card .auth-body { padding: 2rem; }
+
+/* ---------------------------- Accueil --------------------------- */
+.hero {
+    background: linear-gradient(135deg, var(--esp-blue-darker), var(--esp-blue));
+    color: #fff;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--esp-shadow);
+}
+.hero h1 { color: #fff; font-size: 2rem; }
+.hero p { color: rgba(255,255,255,.9); font-size: 1.05rem; margin-bottom: 0; }
+.hero .esp-gold-bar { width: 70px; height: 4px; background: var(--esp-gold); border-radius: 2px; margin-bottom: 1.2rem; }
+
+.feature-card { height: 100%; text-decoration: none; color: inherit; display: block; }
+.feature-card .card-body { padding: 1.5rem; }
+.feature-card .feature-ico {
+    width: 46px; height: 46px; border-radius: 10px;
+    background: #e7eef7; color: var(--esp-blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: .8rem;
+}
+.feature-card h5 { margin-bottom: .3rem; }
+.feature-card p { color: var(--esp-muted); font-size: .9rem; margin: 0; }
+
+/* ---------------------------- Footer ---------------------------- */
+.esp-footer {
+    flex-shrink: 0;
+    background: var(--esp-blue-darker);
+    color: rgba(255,255,255,.75);
+    text-align: center;
+    padding: 1.2rem;
+    margin-top: 3rem;
+    font-size: .9rem;
+}
+.esp-footer .esp-gold { color: var(--esp-gold-light); }

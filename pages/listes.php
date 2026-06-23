@@ -40,7 +40,7 @@ $principale = getCandidats($pdo, $filiereChoisie, 'principale');
 $attente = getCandidats($pdo, $filiereChoisie, 'attente');
 ?>
 
-<h2 class="mb-4">Gestion des listes</h2>
+<h2 class="page-title">Gestion des listes</h2>
 
 <form method="GET" class="mb-4">
     <div class="row g-3">

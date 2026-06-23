@@ -1,6 +1,16 @@
 <?php
 require '../config/database.php';
 include '../includes/verif_connexion.php';
+require '../includes/relances.php';
+
+// Traitement manuel des relances/expirations dues (BM-05), via le bouton dédié.
+$messageRelance = '';
+if (($_GET['action'] ?? '') === 'relances') {
+    $r = traiterRelances($pdo);
+    $messageRelance = "Relances traitées : " . $r['relances'] . " rappel(s) envoyé(s), "
+                    . $r['expirations'] . " place(s) expirée(s) et réattribuée(s).";
+}
+
 include '../includes/header.php';
 
 // Choix concours -> filière (même logique que la page des listes)
@@ -39,7 +49,18 @@ $principale = $requete->fetchAll();
 $message = $_GET['message'] ?? '';
 ?>
 
-<h2 class="mb-4">Enregistrer un désistement</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Enregistrer un désistement</h2>
+    <a href="desistement.php?action=relances&concours=<?= $concoursChoisi ?>&filiere=<?= $filiereChoisie ?>"
+       class="btn btn-outline-warning"
+       onclick="return confirm('Traiter maintenant les relances et expirations en attente ?')">
+        Traiter les relances en attente
+    </a>
+</div>
+
+<?php if ($messageRelance): ?>
+    <div class="alert alert-warning"><?= htmlspecialchars($messageRelance) ?></div>
+<?php endif; ?>
 
 <?php if ($message): ?>
     <div class="alert alert-info"><?= htmlspecialchars($message) ?></div>

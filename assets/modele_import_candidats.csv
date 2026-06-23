@@ -1,0 +1,4 @@
+numero_candidat;nom;prenom;email;telephone;date_naissance;rang
+C101;Diallo;Mariama;mariama.diallo@example.com;770000001;12/05/2005;1
+C102;Sarr;Ousmane;ousmane.sarr@example.com;770000002;03/11/2004;2
+C103;Ndiaye;Aminata;aminata.ndiaye@example.com;770000003;28/02/2005;3
