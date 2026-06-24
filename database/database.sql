@@ -99,29 +99,64 @@ CREATE TABLE historiques (
     FOREIGN KEY (acteur_id) REFERENCES utilisateurs(id)
 );
 
--- Un administrateur (mot de passe : admin123)
-INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role, service)
-VALUES ('Gueye', 'Aminata', 'admin@esp.sn',
-        '$2y$10$REMPLACER_PAR_VOTRE_HASH', 'administrateur', 'Direction');
+-- =====================================================================
+--  Données de test partagées (export nettoyé).
+--  Connexion : admin@esp.sn / admin123   |   agents / agent123
+-- =====================================================================
 
-INSERT INTO concours (type, annee, departement)
-VALUES ('DUT', 2026, 'Génie Informatique');
+INSERT INTO utilisateurs (id, nom, prenom, email, telephone, mot_de_passe, role, service, departement, numero_candidat, date_naissance) VALUES
+(1, 'Gueye', 'Aminata', 'admin@esp.sn', '770926393', '$2y$10$LQjkfBRVrTbAgT75FxjleOs3JRsw.tvbhG9l4qdDNbRv1Kmeg7tzm', 'administrateur', 'Direction', NULL, NULL, NULL),
+(8, 'Diallo', 'Ousmane', 'agent@esp.sn', '770000000', '$2y$10$HEKPddojoAd8PUcuQLVKQOtl0lW5EfuoSSl.AAeHzzFL.Vb2bFvkG', 'agent', NULL, 'Génie Informatique', NULL, NULL),
+(11, 'Diallo', 'Ousmane', 'ousmane@esp.sn', '771111111', '$2y$10$HEKPddojoAd8PUcuQLVKQOtl0lW5EfuoSSl.AAeHzzFL.Vb2bFvkG', 'agent', NULL, 'Génie Informatique', NULL, NULL),
+(12, 'Ndour', 'Aïssatou', 'aissatou@esp.sn', '772222222', '$2y$10$HEKPddojoAd8PUcuQLVKQOtl0lW5EfuoSSl.AAeHzzFL.Vb2bFvkG', 'agent', NULL, 'Génie Civil', NULL, NULL),
+(13, 'Sy', 'Babacar', 'babacar@esp.sn', '773333333', '$2y$10$HEKPddojoAd8PUcuQLVKQOtl0lW5EfuoSSl.AAeHzzFL.Vb2bFvkG', 'agent', NULL, 'Génie Électrique', NULL, NULL),
+(24, 'Sarr', 'Modou', 'modou@esp.sn', '770000001', '-', 'candidat', NULL, NULL, 'C001', NULL),
+(25, 'Kane', 'Bineta', 'bineta@esp.sn', '770000002', '-', 'candidat', NULL, NULL, 'C002', NULL),
+(26, 'Diop', 'Moussa', 'moussa@esp.sn', '770000003', '-', 'candidat', NULL, NULL, 'C003', NULL),
+(27, 'Sow', 'Fatou', 'fatou@esp.sn', '770000004', '-', 'candidat', NULL, NULL, 'C004', NULL),
+(28, 'Ba', 'Ibrahima', 'c005@esp.sn', '770000005', '-', 'candidat', NULL, NULL, 'C005', NULL),
+(29, 'Fall', 'Awa', 'awa@esp.sn', '770000006', '-', 'candidat', NULL, NULL, 'C006', NULL),
+(30, 'Ndiaye', 'Cheikh', 'cheikh@esp.sn', '770000007', '-', 'candidat', NULL, NULL, 'C007', NULL),
+(31, 'Faye', 'Mariama', 'mariama@esp.sn', '770000008', '-', 'candidat', NULL, NULL, 'C008', NULL),
+(32, 'Gueye', 'Abdou', 'abdou@esp.sn', '770000009', '-', 'candidat', NULL, NULL, 'C009', NULL),
+(33, 'Thiam', 'Khady', 'khady@esp.sn', '770000010', '-', 'candidat', NULL, NULL, 'C010', NULL);
 
-INSERT INTO filieres (nom, departement, capacite_accueil, concours_id)
-VALUES ('Génie Informatique', 'Informatique', 30, 1);
+INSERT INTO concours (id, type, annee, departement) VALUES
+(1, 'DUT', 2026, 'Génie Informatique'),
+(2, 'DUT', 2026, 'Génie Civil'),
+(3, 'DIC', 2026, 'Génie Électrique'),
+(4, 'LICENCE', 2026, 'Gestion'),
+(8, 'DIC', 2026, 'Génie informatique');
 
-INSERT INTO listes (type, nombre_etudiants, filiere_id)
-VALUES ('principale', 0, 1),
-       ('attente', 0, 1);
+INSERT INTO filieres (id, nom, departement, capacite_accueil, concours_id) VALUES
+(1, 'Génie Informatique', 'Informatique', 30, 1),
+(2, 'Réseaux et Télécoms', 'Informatique', 25, 1),
+(3, 'Génie Civil', 'Civil', 20, 2),
+(4, 'Génie Électrique', 'Électrique', 25, 3),
+(5, 'Gestion des Entreprises', 'Gestion', 35, 4),
+(9, 'GLSI', 'Génie informatique', 25, 8);
 
-INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, role, numero_candidat)
-VALUES ('Diop', 'Moussa', 'moussa@esp.sn', '-', 'candidat', 'C001'),
-       ('Sow', 'Fatou', 'fatou@esp.sn', '-', 'candidat', 'C002'),
-       ('Ba', 'Ibrahima', 'ibrahima@esp.sn', '-', 'candidat', 'C003'),
-       ('Fall', 'Awa', 'awa@esp.sn', '-', 'candidat', 'C004');
+INSERT INTO listes (id, type, nombre_etudiants, filiere_id) VALUES
+(1, 'principale', 1, 1),
+(2, 'attente', 0, 1),
+(3, 'principale', 0, 2),
+(4, 'attente', 0, 2),
+(5, 'principale', 0, 3),
+(6, 'attente', 0, 3),
+(7, 'principale', 0, 4),
+(8, 'attente', 0, 4),
+(9, 'principale', 0, 5),
+(10, 'attente', 0, 5),
+(17, 'principale', 0, 9),
+(18, 'attente', 0, 9);
 
-INSERT INTO inscriptions (rang, date_inscription, candidat_id, liste_id)
-VALUES (1, '2026-06-01', (SELECT id FROM utilisateurs WHERE numero_candidat='C001'), 2),
-       (2, '2026-06-01', (SELECT id FROM utilisateurs WHERE numero_candidat='C002'), 2),
-       (3, '2026-06-01', (SELECT id FROM utilisateurs WHERE numero_candidat='C003'), 2),
-       (4, '2026-06-01', (SELECT id FROM utilisateurs WHERE numero_candidat='C004'), 2);
+INSERT INTO inscriptions (id, rang, date_inscription, candidat_id, liste_id) VALUES
+(5, 1, '2026-06-01', 28, 1),
+(6, 1, '2026-06-01', 29, 3),
+(7, 1, '2026-06-01', 30, 4),
+(8, 2, '2026-06-01', 31, 4),
+(9, 1, '2026-06-01', 32, 5),
+(10, 1, '2026-06-01', 33, 6);
+
+-- Les tables desistements, notifications, codes_verification et historiques
+-- sont volontairement vides : elles se remplissent à l'usage de l'application.
