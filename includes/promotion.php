@@ -39,6 +39,8 @@ function retirerInscription(PDO $pdo, int $inscriptionId): void
 {
     $pdo->prepare("UPDATE notifications SET inscription_id = NULL WHERE inscription_id = ?")
         ->execute([$inscriptionId]);
+    $pdo->prepare("UPDATE demandes_desistement SET inscription_id = NULL WHERE inscription_id = ?")
+        ->execute([$inscriptionId]);
     $pdo->prepare("DELETE FROM inscriptions WHERE id = ?")->execute([$inscriptionId]);
 }
 
@@ -175,4 +177,87 @@ function promouvoirPremierAttente(PDO $pdo, int $filiereId, ?int $agentId): ?arr
         'email'   => $promu['email'],
         'notifie' => $notifie,
     ];
+}
+
+/** Renvoie le type de liste ('principale' ou 'attente') d'une inscription, ou null. */
+function typeListeInscription(PDO $pdo, int $inscriptionId): ?string
+{
+    $req = $pdo->prepare("SELECT l.type FROM inscriptions i JOIN listes l ON i.liste_id = l.id WHERE i.id = ?");
+    $req->execute([$inscriptionId]);
+    return $req->fetchColumn() ?: null;
+}
+
+/**
+ * Enregistre un désistement pour une inscription (liste principale OU attente) :
+ * trace l'opération, retire le candidat, recalcule les rangs, et — si la place
+ * était en liste principale — promeut automatiquement le premier en attente.
+ *
+ * @return array{type:string, promu:?array}|null  null si l'inscription est introuvable.
+ */
+function enregistrerDesistement(PDO $pdo, int $inscriptionId, int $filiereId, ?int $agentId, string $motif = 'Désistement enregistré'): ?array
+{
+    $type = typeListeInscription($pdo, $inscriptionId);
+    if ($type === null) {
+        return null; // déjà retiré entre-temps
+    }
+
+    [$idPrincipale, $idAttente] = listesFiliere($pdo, $filiereId);
+
+    // Trace du désistement (rattaché à la filière pour les statistiques).
+    $pdo->prepare("INSERT INTO desistements (motif, agent_id, filiere_id) VALUES (?, ?, ?)")
+        ->execute([$motif, $agentId, $filiereId]);
+
+    // Retrait du candidat de sa liste.
+    retirerInscription($pdo, $inscriptionId);
+
+    $promu = null;
+    if ($type === 'principale') {
+        if ($idPrincipale) { recalculerRangs($pdo, $idPrincipale); majEffectif($pdo, $idPrincipale); }
+        // Une place se libère en principale -> promotion du premier de la liste d'attente.
+        $promu = promouvoirPremierAttente($pdo, $filiereId, $agentId);
+    } elseif ($idAttente) {
+        // Désistement depuis la liste d'attente : pas de promotion, juste renumérotation.
+        recalculerRangs($pdo, $idAttente);
+        majEffectif($pdo, $idAttente);
+    }
+
+    return ['type' => $type, 'promu' => $promu];
+}
+
+/**
+ * Notifie par e-mail les agents du département concerné qu'un candidat a demandé
+ * à se désister. Repli sur tous les agents/admins si aucun agent pour ce département.
+ *
+ * @return int  nombre d'e-mails envoyés.
+ */
+function notifierAgentsDesistement(PDO $pdo, array $infos): int
+{
+    $req = $pdo->prepare("SELECT email, prenom FROM utilisateurs
+                          WHERE role = 'agent' AND departement = ? AND email IS NOT NULL AND email <> ''");
+    $req->execute([$infos['departement']]);
+    $agents = $req->fetchAll();
+
+    if (!$agents) {
+        $agents = $pdo->query("SELECT email, prenom FROM utilisateurs
+                               WHERE role IN ('agent', 'administrateur') AND email IS NOT NULL AND email <> ''")->fetchAll();
+    }
+
+    $lien = urlBaseApp() . "/pages/demandes_desistement.php";
+    $contenu = "
+        <p>Bonjour,</p>
+        <p>Le candidat <strong>" . htmlspecialchars($infos['prenom'] . ' ' . $infos['nom'])
+        . "</strong> (n° " . htmlspecialchars($infos['numero']) . ") demande à <strong>se désister</strong>
+           de la filière <strong>" . htmlspecialchars($infos['filiere']) . "</strong>.</p>"
+        . ($infos['motif'] !== '' ? "<p><em>Motif : " . htmlspecialchars($infos['motif']) . "</em></p>" : "")
+        . "<p>Merci de traiter cette demande dans l'application :</p>"
+        . boutonEmail($lien, "Voir les demandes de désistement");
+
+    $n = 0;
+    foreach ($agents as $a) {
+        if (envoyerEmail($a['email'], "Demande de désistement — ESP Dakar",
+                         gabaritEmail("Nouvelle demande de désistement", $contenu))) {
+            $n++;
+        }
+    }
+    return $n;
 }

@@ -32,6 +32,7 @@ $pageCourante = basename($_SERVER['PHP_SELF']);
                     <?php if (isset($_SESSION['utilisateur_id'])): ?>
                         <a class="nav-link <?= $pageCourante === 'listes.php' ? 'actif' : '' ?>" href="/Gestion_Liste_attente/pages/listes.php"><i class="bi bi-list-ol"></i> Listes</a>
                         <a class="nav-link <?= $pageCourante === 'desistement.php' ? 'actif' : '' ?>" href="/Gestion_Liste_attente/pages/desistement.php"><i class="bi bi-person-dash"></i> Désistement</a>
+                        <a class="nav-link <?= $pageCourante === 'demandes_desistement.php' ? 'actif' : '' ?>" href="/Gestion_Liste_attente/pages/demandes_desistement.php"><i class="bi bi-inbox"></i> Demandes</a>
                         <?php if (in_array($_SESSION['role'], ['agent', 'administrateur'], true)): ?>
                             <a class="nav-link <?= $pageCourante === 'import.php' ? 'actif' : '' ?>" href="/Gestion_Liste_attente/pages/import.php"><i class="bi bi-upload"></i> Importer</a>
                             <a class="nav-link <?= $pageCourante === 'historique.php' ? 'actif' : '' ?>" href="/Gestion_Liste_attente/pages/historique.php"><i class="bi bi-clock-history"></i> Historique</a>

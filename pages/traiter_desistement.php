@@ -8,29 +8,16 @@ $filiereId     = (int) $_GET['filiere'];
 $concoursId    = (int) $_GET['concours'];
 $agentId       = (int) $_SESSION['utilisateur_id'];
 
-// 1) Enregistrer le désistement (rattaché à sa filière pour les statistiques).
-$pdo->prepare("INSERT INTO desistements (motif, agent_id, filiere_id) VALUES ('Désistement enregistré', ?, ?)")
-    ->execute([$agentId, $filiereId]);
+// Enregistre le désistement et promeut automatiquement le suivant si besoin
+// (logique partagée avec les demandes de désistement et les relances).
+$res = enregistrerDesistement($pdo, $inscriptionId, $filiereId, $agentId);
 
-// 2) Retirer le candidat désisté de la liste principale.
-retirerInscription($pdo, $inscriptionId);
-
-// 3) Promouvoir automatiquement le premier candidat de la liste d'attente
-//    (met à jour les rangs, les effectifs et envoie la notification e-mail).
-$promu = promouvoirPremierAttente($pdo, $filiereId, $agentId);
-
-// 4) Refermer les éventuels trous de rang en liste principale (cas liste d'attente vide).
-[$idPrincipale] = listesFiliere($pdo, $filiereId);
-if ($idPrincipale) {
-    recalculerRangs($pdo, $idPrincipale);
-    majEffectif($pdo, $idPrincipale);
-}
-
-// 5) Message de retour pour l'agent.
-if ($promu) {
-    $message = "Désistement enregistré. " . $promu['prenom'] . " " . $promu['nom']
+if ($res === null) {
+    $message = "Ce candidat n'est plus inscrit.";
+} elseif ($res['promu']) {
+    $message = "Désistement enregistré. " . $res['promu']['prenom'] . " " . $res['promu']['nom']
              . " a été promu(e) en liste principale.";
-    $message .= $promu['notifie']
+    $message .= $res['promu']['notifie']
         ? " Un e-mail de notification lui a été envoyé."
         : " (Attention : l'e-mail de notification n'a pas pu être envoyé.)";
 } else {

@@ -160,14 +160,4 @@ if (!$filiereValide) {
     </div>
 </div>
 
-<div class="mt-4">
-    <h6>Colonnes attendues dans le fichier CSV</h6>
-    <p class="text-muted mb-1">
-        Première ligne = en-têtes. Colonnes obligatoires : <code>numero_candidat</code>,
-        <code>nom</code>, <code>prenom</code>. Facultatives : <code>email</code>,
-        <code>telephone</code>, <code>date_naissance</code> (JJ/MM/AAAA), <code>rang</code>.
-    </p>
-    <p class="text-muted">Séparateur point-virgule (<code>;</code>) ou virgule (<code>,</code>) — les deux sont acceptés.</p>
-</div>
-
 <?php include '../includes/footer.php'; ?>
